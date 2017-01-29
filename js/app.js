@@ -80,7 +80,7 @@ function uploadImage(){
         }else{
           updateStatusText("");
           resetForm();
-          displayAlert("<strong>Success!</strong> Your image has been uploaded: <a style="color:white;" href='" + data.value + "'>" + data.value + "</a>", "success");
+          displayAlert("<strong>Success!</strong> Your image has been uploaded: <a style='color:white;' href='" + data.value + "'>" + data.value + "</a>", "success");
         }
       },
       error:function(ts){
