@@ -12,6 +12,8 @@ if($_POST){
     $email = $_POST['email'];
     $pass = $_POST['pass'];
     $msg = $_POST['msg'];
+    $hash_tags = $_POST['hash_tags'];
+    $caption = $msg . '\n\n' . $hash_tags;
     $imgURL = $_POST['img_url'];
     $imgFormat = $_POST['img_format']; // 'E' (Extended) or 'C' (Cropped) or 'U' (Untouched)
 
@@ -20,7 +22,7 @@ if($_POST){
 
         $result = null;
         if(!$loginError){
-          $result = $nt->post($msg, $imgURL, $imgFormat);
+          $result = $nt->post($caption, $imgURL, $imgFormat);
 
           if (!empty($result) && is_array($result) && intval($result['isPosted'])===1){
             //set the URL of the post
@@ -66,8 +68,8 @@ if($_POST){
         $allowed =  array('gif', 'GIF', 'png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP');
 
         //restrict file size
-        if($file_size > 50000000) {
-          $data = ["err" => true, "value" => 'File size cannot exceed 50 MB'];
+        if($file_size > 4000000) {
+          $data = ["err" => true, "value" => 'File size cannot exceed 4 MB'];
         //sanitize file extension
         }elseif(!in_array($file_ext, $allowed)){
           $data = ["err" => true, "value" => 'Sorry! That file type is not allowed.'];

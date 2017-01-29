@@ -1,9 +1,46 @@
+//global variable
+var tags = [];
+
+$(document).ready(function() {
+  $('input[type="range"]').rangeslider({
+    polyfill : false,
+    onInit : function() {
+        this.output = $( '<div class="range-output text-center" />' ).insertAfter( this.$range ).html( this.$element.val() + "%" );
+    },
+    onSlide : function( position, value ) {
+        this.output.html( value + "%" );
+        updateHashTags();
+    }
+  });
+});
+
+function updateHashTags(){
+  var hashes = "";
+
+  if(tags != null){
+    var val = $('input[type="range"]').val() / 100;
+
+    for(var i = 0; i < tags.length; i++){
+        //hashes = hashes + "#" + tags[i]['name'] + " ";
+      if(tags[i]['confidence'] >= val){
+        hashes = hashes + "#" + tags[i]['name'] + " ";
+      }
+    }
+
+    $("#hash_tags").val(hashes);
+
+    return hashes;
+  }
+}
+
 function displayAlert(text, type){
   $("#alert_message").empty();
+  $("#status_text").empty();
   $("#alert_message").append("<div class='alert alert-" + type + "'><a href'#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + text + "</div>");
 }
 
 function updateStatusText(text){
+  $("#alert_message").empty();
   $("#status_text").empty();
   $("#status_text").append(text);
 }
@@ -37,7 +74,7 @@ function chooseImage(input){
           displayAlert(data.value, "danger");
         }else{
           updateStatusText("");
-          displayAlert("Done uploading image to server.", "info");
+          displayAlert("Done uploading image to server.", "success");
           $("#img_url").val(data.value);
           $('<input type="hidden">').attr({
               id: 'delete_hash',
@@ -55,6 +92,11 @@ function chooseImage(input){
 }
 
 function uploadImage(){
+    if(!$("#img_url").val().trim()){
+      displayAlert("Please upload an image.", "danger");
+      return;
+    }
+
     $('#spinner').show();
 
     $('#btnUpload').prop('disabled', true);
@@ -68,6 +110,7 @@ function uploadImage(){
         'email' : $("#email").val(),
         'pass' : $("#pass").val(),
         'msg' : $("#msg").val(),
+        'hash_tags' : $("#hash_tags").val(),
         'img_url' : $("#img_url").val(),
         'img_format' : $('input[name=img_format]:checked', '#form').val(),
         'delete_hash' : $("#delete_hash").val()
@@ -96,12 +139,17 @@ function uploadImage(){
 }
 
 function analyseImage(imgURL){
+    if(!imgURL.trim()){
+      displayAlert("Please upload an image.", "danger");
+      return;
+    }
+
     $('#spinner').show();
 
     updateStatusText("Analysing image...");
 
         $.ajax({
-            url: "https://westus.api.cognitive.microsoft.com/vision/v1.0/describe?maxCandidates=1",
+            url: "https://westus.api.cognitive.microsoft.com/vision/v1.0/tag",
             dataType: 'json',
             beforeSend: function(xhrObj){
                 // Request headers
@@ -124,21 +172,14 @@ function analyseImage(imgURL){
 
 function generateHashes(json){
   updateStatusText("Generating image hash tags...");
+  var jsonString = JSON.stringify(json);
 
-  var hashes = "";
-  $.each(json, function(index, data) {
-    if(data.tags != null){
-      for(i = 0; i < data.tags.length; i++){
-        hashes = hashes + "#" + data.tags[i] + " ";
-      }
-    }
-  });
+  var data = JSON.parse(jsonString);
+  tags = data['tags'];
 
-  var msg = $("#msg").val();
-  $("#msg").val(msg + "\n\n" + hashes);
+  var hashes = updateHashTags();
 
   displayAlert("<strong>Analysis completed!</strong> Your image has been analysed and the following tags were generated: " + hashes, "success");
 
   $('#spinner').hide();
-  updateStatusText("");
 }
