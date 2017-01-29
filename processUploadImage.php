@@ -21,17 +21,17 @@ if($_POST){
         $result = null;
         if(!$loginError){
           $result = $nt->post($msg, $imgURL, $imgFormat);
+
+          if (!empty($result) && is_array($result) && intval($result['isPosted'])===1){
+            //set the URL of the post
+            $data = ["err" => false, "value" => $result['postURL']];
+          }else{
+            $data = ["err" => true, "value" => 'An error has occured. Please try again.'];
+          }
+
         }else{
           $data = ["err" => true, "value" => "Error! Could not login. Please make sure to enter the correct login details."];
         }
-
-        if (!empty($result) && is_array($result) && intval($result['isPosted'])===1){
-          //set the URL of the post
-          $data = ["err" => false, "value" => $result['postURL']];
-        }else{
-          $data = ["err" => true, "value" => 'An error has occured. Please try again.'];
-        }
-
         //delete the image from the server
         /*
         if(isset($_POST['upload_name']) && !empty($_POST['upload_name'])){
