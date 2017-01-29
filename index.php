@@ -45,13 +45,18 @@
 
         <div class="form-group">
           <label class="col-lg-2 control-label" for="img_url">Image URL:</label>
-          <div class="col-lg-8">
-            <input class="form-control" type="text" id="img_url" name="img_url"/>
+          <div class="col-lg-6">
+            <input class="form-control" type="text" id="img_url" name="img_url" readonly/>
           </div>
           <div class="col-lg-2">
-            <label class="btn btn-success btn-file">
+            <label class="btn btn-success">
               Choose Image<input id="file" type="file" name="upload" class="hidden" onchange="chooseImage(this);">
             </label>
+          </div>
+          <div class="col-lg-2">
+            <button id="btnGenerate" class="btn btn-primary" onclick="analyseImage($('#img_url').val());">
+              Generate Hash Tags
+            </button>
           </div>
         </div>
 

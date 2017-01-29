@@ -7,6 +7,12 @@ function updateStatusText(text){
   $("#status_text").empty();
   $("#status_text").append(text);
 }
+
+function resetForm(){
+  $("#img_url").val("");
+  $("#alert_message").val("");
+}
+
 function chooseImage(input){
     var file = input.files[0];
     var formData = new FormData();
@@ -25,25 +31,25 @@ function chooseImage(input){
       processData: false,
       dataType: 'json',
       success: function(data){
+        $('#spinner').hide();
         if(data.err){
-          $('#spinner').hide();
           updateStatusText("");
           displayAlert(data.value, "danger");
         }else{
-          updateStatusText("Done uploading image to server.");
+          updateStatusText("");
+          displayAlert("Done uploading image to server.", "info");
           $("#img_url").val(data.value);
           $('<input type="hidden">').attr({
-              id: 'upload_name',
-              name: 'upload_name',
+              id: 'delete_hash',
+              name: 'delete_hash',
               value: data.value2
           }).appendTo('form');
-
-          analyseImage(data.value);
         }
       },
       error:function(ts){
+        updateStatusText("");
         $('#spinner').hide();
-        displayAlert('Error occurred during ajax request.', "danger");
+        displayAlert(ts.responseText, "danger");
       }
     });
 }
@@ -62,7 +68,7 @@ function uploadImage(){
         'msg' : $("#msg").val(),
         'img_url' : $("#img_url").val(),
         'img_format' : $('input[name=img_format]:checked', '#form').val(),
-        'upload_name' : $("#upload_name").val()
+        'delete_hash' : $("#delete_hash").val()
       },
       dataType: 'json',
       success: function(data){
@@ -73,13 +79,16 @@ function uploadImage(){
           displayAlert(data.value, "danger");
         }else{
           updateStatusText("");
-          displayAlert("<strong>Success!</strong> Your image has been uploaded: <a href='" + data.value + "'>" + data.value + "</a>", "success");
+          resetForm();
+          displayAlert("<strong>Success!</strong> Your image has been uploaded: <a style="color:white;" href='" + data.value + "'>" + data.value + "</a>", "success");
         }
       },
       error:function(ts){
+        $('#btnUpload').prop('disabled', false);
         $('#spinner').hide();
         updateStatusText("");
         displayAlert('Error occurred during ajax request.', "danger");
+        displayAlert(ts.responseText, "danger");
       }
     });
 }
@@ -105,6 +114,7 @@ function analyseImage(imgURL){
             generateHashes(data);
         })
         .fail(function() {
+            updateStatusText("");
             $('#spinner').hide();
             $("#error_message").append('Error! Could not analyse the image.');
         });
