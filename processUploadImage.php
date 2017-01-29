@@ -63,7 +63,7 @@ if($_POST){
         $file_tmp = $_FILES['upload']['tmp_name'];
         $file_ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
 
-        $allowed =  array('gif', 'png', 'jpg', 'jpeg', 'bmp');
+        $allowed =  array('gif', 'GIF', 'png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP');
 
         //restrict file size
         if($file_size > 50000000) {

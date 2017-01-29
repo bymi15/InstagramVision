@@ -10,7 +10,7 @@ function updateStatusText(text){
 
 function resetForm(){
   $("#img_url").val("");
-  $("#alert_message").val("");
+  $("#msg").val("");
 }
 
 function chooseImage(input){
@@ -58,6 +58,8 @@ function uploadImage(){
     $('#spinner').show();
 
     $('#btnUpload').prop('disabled', true);
+
+    updateStatusText("Uploading image to instagram...");
 
     $.ajax({
       url: "processUploadImage.php",
