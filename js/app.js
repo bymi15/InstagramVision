@@ -1,12 +1,21 @@
-function chooseImage(input){
-    $("#error_message").empty();
+function displayAlert(text, type){
+  $("#alert_message").empty();
+  $("#alert_message").append("<div class='alert alert-" + type + "'><a href'#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + text + "</div>");
+}
 
+function updateStatusText(text){
+  $("#status_text").empty();
+  $("#status_text").append(text);
+}
+function chooseImage(input){
     var file = input.files[0];
     var formData = new FormData();
     formData.append('upload', file);
     formData.append('file', 'file');
 
     $('#spinner').show();
+
+    updateStatusText("Uploading image to server...");
 
     $.ajax({
       url: "processUploadImage.php",
@@ -17,8 +26,11 @@ function chooseImage(input){
       dataType: 'json',
       success: function(data){
         if(data.err){
-          $("#error_message").append(data.value);
+          $('#spinner').hide();
+          updateStatusText("");
+          displayAlert(data.value, "danger");
         }else{
+          updateStatusText("Done uploading image to server.");
           $("#img_url").val(data.value);
           $('<input type="hidden">').attr({
               id: 'upload_name',
@@ -30,15 +42,13 @@ function chooseImage(input){
         }
       },
       error:function(ts){
-        $("#error_message").append('Error occurred during ajax request.');
-        $("#error_message").append(ts.responseText);
+        $('#spinner').hide();
+        displayAlert('Error occurred during ajax request.', "danger");
       }
     });
 }
 
 function uploadImage(){
-    $("#error_message").empty();
-
     $('#spinner').show();
 
     $('#btnUpload').prop('disabled', true);
@@ -56,29 +66,28 @@ function uploadImage(){
       },
       dataType: 'json',
       success: function(data){
+        $('#btnUpload').prop('disabled', false);
+        $('#spinner').hide();
         if(data.err){
-          $("#error_message").append(data.value);
+          updateStatusText("");
+          displayAlert(data.value, "danger");
         }else{
-          alert("Success!<br>" + data.value);
-          //bootstrap alert
-          //display successfully uploaded file
+          updateStatusText("");
+          displayAlert("<strong>Success!</strong> Your image has been uploaded: <a href='" + data.value + "'>" + data.value + "</a>", "success");
         }
       },
       error:function(ts){
-        $("#error_message").append('Error occurred during ajax request.');
-        $("#error_message").append(ts.responseText);
-      },
-      complete: function(){
         $('#spinner').hide();
-        $('#btnUpload').prop('disabled', false);
+        updateStatusText("");
+        displayAlert('Error occurred during ajax request.', "danger");
       }
-      });
+    });
 }
 
 function analyseImage(imgURL){
-    $("#error_message").empty();
-
     $('#spinner').show();
+
+    updateStatusText("Analysing image...");
 
         $.ajax({
             url: "https://westus.api.cognitive.microsoft.com/vision/v1.0/describe?maxCandidates=1",
@@ -102,6 +111,8 @@ function analyseImage(imgURL){
 }
 
 function generateHashes(json){
+  updateStatusText("Generating image hash tags...");
+
   var hashes = "";
   $.each(json, function(index, data) {
     if(data.tags != null){
@@ -114,7 +125,8 @@ function generateHashes(json){
   var msg = $("#msg").val();
   $("#msg").val(msg + "\n\n" + hashes);
 
-  alert("Tags were added: " + hashes);
+  displayAlert("<strong>Analysis completed!</strong> Your image has been analysed and the following tags were generated: " + hashes, "success");
 
   $('#spinner').hide();
+  updateStatusText("");
 }

@@ -60,7 +60,11 @@
           $file_name = str_replace(".", "", $timestamp) . rand(1000, 9999) . '.' . $file_ext;
           $file_path = ROOTPATH . 'uploads/' . $file_name;
           $upload_path = ABSPATH . 'uploads/' . $file_name;
+
           if(move_uploaded_file($file_tmp, $upload_path)) {
+            //change permissions to allow read/write
+            chmod($upload_path, 0777);
+
             //set the temporary path
             $data = ["err" => false, "value" => $file_path, "value2" => $file_name];
           }else{
