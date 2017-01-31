@@ -12,7 +12,36 @@ $(document).ready(function() {
         updateHashTags();
     }
   });
+
+  $("input:checkbox").change(function(){
+    updateExtraHashes();
+  });
 });
+
+
+function updateExtraHashes(){
+  var hash1 = $("#include_hash_tags_1");
+  var hash2 = $("#include_hash_tags_2");
+  var hash3 = $("#include_hash_tags_3");
+  var hash4 = $("#include_hash_tags_4");
+
+  var hashes = "";
+
+  if(hash1.prop('checked')){
+    hashes = hashes + "#love #instagood #me #tbt #cute #follow #followme #photooftheday #happy #amazing #smile #follow4follow #like4like #look #instalike #picoftheday ";
+  }
+  if(hash2.prop('checked')){
+    hashes = hashes + "#nature #sky #sun #summer #beach #beautiful #pretty #sunset #sunrise #blue #flowers #night #tree #twilight #clouds ";
+  }
+  if(hash3.prop('checked')){
+    hashes = hashes + "#animals #animal #pet #dog #cat #dogs #cats #photooftheday #pets #nature #petstagram #petsagram ";
+  }
+  if(hash4.prop('checked')){
+    hashes = hashes + "#food #foodporn #yum #instafood #yummy #amazing #sweet #dinner #lunch #breakfast #fresh #tasty #delicious #foodpics #hungry ";
+  }
+
+  $("#extra_hash_tags").val(hashes);
+}
 
 function updateHashTags(){
   var hashes = "";
@@ -48,6 +77,20 @@ function updateStatusText(text){
 function resetForm(){
   $("#img_url").val("");
   $("#msg").val("");
+}
+
+function validateHashes(hashes){
+  if(hashes.trim().split(" ").length >= 30){
+    return false;
+  }
+  return true;
+}
+
+function validateCaption(caption){
+  if(caption.length >= 2100){
+    return false;
+  }
+  return true;
 }
 
 function chooseImage(input){
@@ -95,6 +138,12 @@ function uploadImage(){
     if(!$("#img_url").val().trim()){
       displayAlert("Please upload an image.", "danger");
       return;
+    }else if(!validateHashes($("#hash_tags").val() + $("#extra_hash_tags").val())){
+      displayAlert("Instagram does not allow more than 30 hash tags per post.", "danger");
+      return;
+    }else if(!validateCaption($("#msg").val() + $("#hash_tags").val() + $("#extra_hash_tags").val())){
+      displayAlert("Instagram does not allow more than 2200 characters per post.", "danger");
+      return;
     }
 
     $('#spinner').show();
@@ -111,6 +160,7 @@ function uploadImage(){
         'pass' : $("#pass").val(),
         'msg' : $("#msg").val(),
         'hash_tags' : $("#hash_tags").val(),
+        'extra_hash_tags' : $("#extra_hash_tags").val(),
         'img_url' : $("#img_url").val(),
         'img_format' : $('input[name=img_format]:checked', '#form').val(),
         'delete_hash' : $("#delete_hash").val()

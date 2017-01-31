@@ -3,6 +3,8 @@
 
 <html>
   <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/rangeslider.css">
   <script src="js/jquery-3.1.1.min.js"></script>
@@ -65,7 +67,7 @@
         <div class="form-group">
           <label class="col-lg-2 control-label" for="msg">Hash Tags:</label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" id="hash_tags" name="hash_tags"/>
+            <textarea class="form-control" rows="2" id="hash_tags" name="hash_tags"></textarea>
           </div>
           <div class="col-lg-2">
             <button id="btnGenerate" class="btn btn-primary" onclick="analyseImage($('#img_url').val());">
@@ -73,6 +75,31 @@
             </button>
           </div>
         </div>
+
+        <div class="form-group">
+          <label class="col-lg-2 control-label" for="msg">Extra Hash Tags:</label>
+          <div class="col-lg-10">
+            <textarea class="form-control" rows="2" id="extra_hash_tags" name="extra_hash_tags"></textarea>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" id="include_hash_tags_1"> Include most popular hashtags
+              </label>
+              &nbsp
+              <label>
+                <input type="checkbox" id="include_hash_tags_2"> Include nature tags
+              </label>
+              &nbsp
+              <label>
+                <input type="checkbox" id="include_hash_tags_3"> Include animal tags
+              </label>
+              &nbsp
+              <label>
+                <input type="checkbox" id="include_hash_tags_4"> Include food tags
+              </label>
+            </div>
+          </div>
+        </div>
+
         <br>
         <div class="form-group">
           <label class="col-lg-2 control-label" for="msg">Tag Confidence:</label>

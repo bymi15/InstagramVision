@@ -13,7 +13,8 @@ if($_POST){
     $pass = $_POST['pass'];
     $msg = $_POST['msg'];
     $hash_tags = $_POST['hash_tags'];
-    $caption = $msg . '\n\n' . $hash_tags;
+    $extra_hash_tags = $_POST['extra_hash_tags'];
+    $caption = $msg . '\n.\n.\n.\n' . $hash_tags . $extra_hash_tags;
     $imgURL = $_POST['img_url'];
     $imgFormat = $_POST['img_format']; // 'E' (Extended) or 'C' (Cropped) or 'U' (Untouched)
 
