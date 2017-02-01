@@ -23,11 +23,12 @@ function updateExtraHashes(){
   var hash2 = $("#include_hash_tags_2");
   var hash3 = $("#include_hash_tags_3");
   var hash4 = $("#include_hash_tags_4");
+  var hash5 = $("#include_hash_tags_5");
 
   var hashes = "";
 
   if(hash1.prop('checked')){
-    hashes = hashes + "#love #instagood #me #tbt #cute #follow #followme #photooftheday #happy #amazing #smile #follow4follow #like4like #look #instalike #picoftheday ";
+    hashes = hashes + "#love #instagood #me #tbt #cute #follow #followme #photooftheday #happy #friends #smile #follow4follow #like4like #look #instalike #fashion ";
   }
   if(hash2.prop('checked')){
     hashes = hashes + "#nature #sky #sun #summer #beach #beautiful #pretty #sunset #sunrise #blue #flowers #night #tree #twilight #clouds ";
@@ -37,6 +38,9 @@ function updateExtraHashes(){
   }
   if(hash4.prop('checked')){
     hashes = hashes + "#food #foodporn #yum #instafood #yummy #amazing #sweet #dinner #lunch #breakfast #fresh #tasty #delicious #foodpics #hungry ";
+  }
+  if(hash5.prop('checked')){
+    hashes = hashes + "#셀스타그램 #먹스타그램 #일상 #셀카 #맞팔 #얼스타그램 #데일리 #소통 #선팔 #맛스타그램 #팔로우 #데일리룩 #카페 #패션 #데일리패션 #운동 ";
   }
 
   $("#extra_hash_tags").val(hashes);
@@ -64,17 +68,17 @@ function updateHashTags(){
 function displayAlert(text, type){
   $("#alert_message").empty();
   $("#status_text").empty();
-  
+
   var alert = $("<div id='alert_dialog' class='alert alert-" + type + "'><a href'#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + text + "</div>").hide();
-  
-  
+
+
   $("#alert_message").append(alert);
-  
+
   alert.fadeIn(800);
-        
+
   window.setTimeout(function () {
     // close the dialog
-    alert.fadeTo(300, 0.5).slideUp(800, function () {
+    alert.fadeOut(800, function () {
       alert.alert('close');
     });
   }, 4000);

@@ -96,6 +96,10 @@
               <label>
                 <input type="checkbox" id="include_hash_tags_4"> Include food tags
               </label>
+              &nbsp
+              <label>
+                <input type="checkbox" id="include_hash_tags_5"> Include popular korean tags
+              </label>
             </div>
           </div>
         </div>
