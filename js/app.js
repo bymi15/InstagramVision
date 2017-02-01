@@ -18,7 +18,6 @@ $(document).ready(function() {
   });
 });
 
-
 function updateExtraHashes(){
   var hash1 = $("#include_hash_tags_1");
   var hash2 = $("#include_hash_tags_2");
@@ -65,7 +64,20 @@ function updateHashTags(){
 function displayAlert(text, type){
   $("#alert_message").empty();
   $("#status_text").empty();
-  $("#alert_message").append("<div class='alert alert-" + type + "'><a href'#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + text + "</div>");
+  
+  var alert = $("<div id='alert_dialog' class='alert alert-" + type + "'><a href'#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + text + "</div>").hide();
+  
+  
+  $("#alert_message").append(alert);
+  
+  alert.fadeIn(2000);
+        
+  window.setTimeout(function () {
+    // close the dialog
+    alert.fadeTo(300, 0.5).slideUp(2000, function () {
+      alert.alert('close');
+    });
+  }, 4000);
 }
 
 function updateStatusText(text){
@@ -104,7 +116,7 @@ function chooseImage(input){
     updateStatusText("Uploading image to server...");
 
     $.ajax({
-      url: "processUploadImage.php",
+      url: "server.php",
       data: formData,
       type: "POST",
       contentType: false,
@@ -153,7 +165,7 @@ function uploadImage(){
     updateStatusText("Uploading image to instagram...");
 
     $.ajax({
-      url: "processUploadImage.php",
+      url: "server.php",
       type: "POST",
       data: {
         'email' : $("#email").val(),
