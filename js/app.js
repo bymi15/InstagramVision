@@ -70,11 +70,11 @@ function displayAlert(text, type){
   
   $("#alert_message").append(alert);
   
-  alert.fadeIn(2000);
+  alert.fadeIn(800);
         
   window.setTimeout(function () {
     // close the dialog
-    alert.fadeTo(300, 0.5).slideUp(2000, function () {
+    alert.fadeTo(300, 0.5).slideUp(800, function () {
       alert.alert('close');
     });
   }, 4000);
