@@ -93,6 +93,8 @@ function updateStatusText(text){
 function resetForm(){
   $("#img_url").val("");
   $("#msg").val("");
+  $("#hash_tags").val("");
+  $("#extra_hash_tags").val("");
 }
 
 function validateHashes(hashes){
@@ -150,6 +152,64 @@ function chooseImage(input){
     });
 }
 
+function logout(){
+  $('#spinner').show();
+  updateStatusText("Logging out...");
+
+  $.ajax({
+      url: "server.php",
+      type: "POST",
+      data: {
+        'logout' : 1
+      },
+      dataType: 'json',
+      success: function(data){
+        window.location.href = window.location.href;
+      },
+      error:function(ts){
+        $('#spinner').hide();
+        updateStatusText("");
+        displayAlert('Error occurred during ajax request.', "danger");
+        displayAlert(ts.responseText, "danger");
+      }
+  });
+}
+
+function login(){
+    $('#spinner').show();
+
+    $('#btnLogin').prop('disabled', true);
+
+    updateStatusText("Logging in to instagram...");
+
+    $.ajax({
+      url: "server.php",
+      type: "POST",
+      data: {
+        'email' : $("#email").val(),
+        'pass' : $("#pass").val()
+      },
+      dataType: 'json',
+      success: function(data){
+        $('#spinner').hide();
+        $('#btnLogin').prop('disabled', false);
+        if(data.err){
+          updateStatusText("");
+          displayAlert(data.value, "danger");
+        }else{
+          window.location.href = window.location.href;
+        }
+      },
+      error:function(ts){
+        $('#btnLogin').prop('disabled', false);
+        $('#spinner').hide();
+        updateStatusText("");
+        displayAlert('Error occurred during ajax request.', "danger");
+        displayAlert(ts.responseText, "danger");
+      }
+    });
+}
+
 function uploadImage(){
     if(!$("#img_url").val().trim()){
       displayAlert("Please upload an image.", "danger");
@@ -172,8 +232,6 @@ function uploadImage(){
       url: "server.php",
       type: "POST",
       data: {
-        'email' : $("#email").val(),
-        'pass' : $("#pass").val(),
         'msg' : $("#msg").val(),
         'hash_tags' : $("#hash_tags").val(),
         'extra_hash_tags' : $("#extra_hash_tags").val(),
@@ -187,6 +245,7 @@ function uploadImage(){
         $('#spinner').hide();
         if(data.err){
           updateStatusText("");
+          resetForm();
           displayAlert(data.value, "danger");
         }else{
           updateStatusText("");

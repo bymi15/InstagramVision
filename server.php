@@ -5,12 +5,53 @@ require_once "path.php";
 require_once "lib/nxs-api/nxs-api.php";
 require_once "lib/nxs-api/nxs-http.php";
 require_once "lib/inc/nxs-functions.php";
+require_once 'lib/inc/functions.php';
+
+session_start();
 
 if($_POST){
-      //post to instagram
-  if(isset($_POST['msg'], $_POST['img_url'])){
+  //login to instagram
+  if(isset($_POST['email'], $_POST['pass'])){
     $email = $_POST['email'];
     $pass = $_POST['pass'];
+
+    $nt = new nxsAPI_IG();
+    $loginError = $nt->connect($email, $pass);
+
+    if(!$loginError){
+      session_regenerate_id(true);
+      $token = generateTokenKey();
+      $_SESSION['token'] = $token;
+      $_SESSION['email'] = $email;
+
+      $advSetString = json_encode($nt->getAdvSet());
+      $encryptedAdvSet = encryptData($advSetString, $token);
+      setcookie("advSet", $encryptedAdvSet, time() + 3600); //expires in an hour
+      $data = ["err" => false, "value" => "successfully logged in"];
+    }else{
+      $data = ["err" => true, "value" => "Error! Could not login. Please make sure to enter the correct login details."];
+    }
+
+    //return a json
+    echo json_encode($data);
+
+  //logout
+  }elseif(isset($_POST['logout'])){
+
+    //delete the cookies
+    unset($_COOKIE['advSet']);
+    setcookie('advSet', null, -1, '/');
+
+    //delete the session variables
+    session_destroy();
+
+    $data = ["err" => false, "value" => "logged out"];
+
+    //return a json
+    echo json_encode($data);
+
+  //post to instagram
+  }elseif(isset($_POST['msg'], $_POST['img_url'], $_COOKIE['advSet'], $_SESSION['token'])){
     $msg = $_POST['msg'];
     $hash_tags = $_POST['hash_tags'];
     $extra_hash_tags = $_POST['extra_hash_tags'];
@@ -19,7 +60,11 @@ if($_POST){
     $imgFormat = $_POST['img_format']; // 'E' (Extended) or 'C' (Cropped) or 'U' (Untouched)
 
         $nt = new nxsAPI_IG();
-        $loginError = $nt->connect($email, $pass);
+        $ciphertext = $_COOKIE['advSet'];
+        $advSetString = decryptData($ciphertext, $_SESSION['token']);
+
+        $advSet = json_decode($advSetString, true);
+        $loginError = $nt->directLogin($advSet);
 
         $result = null;
         if(!$loginError){
