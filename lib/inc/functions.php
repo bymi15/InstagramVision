@@ -1,6 +1,5 @@
 <?php
 require_once 'config.php';
-require_once "/lib/random_compat/lib/random.php";
 
 function generateTokenKey(){
     $data = random_bytes(16) . KEY_VAL;

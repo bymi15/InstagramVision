@@ -5,6 +5,7 @@ require_once "path.php";
 require_once "lib/nxs-api/nxs-api.php";
 require_once "lib/nxs-api/nxs-http.php";
 require_once "lib/inc/nxs-functions.php";
+require_once "lib/random_compat/lib/random.php";
 require_once 'lib/inc/functions.php';
 
 session_start();
