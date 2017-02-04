@@ -164,7 +164,8 @@ function logout(){
       },
       dataType: 'json',
       success: function(data){
-        window.location.href = window.location.href;
+        alert(data.value);
+        window.location.reload();
       },
       error:function(ts){
         $('#spinner').hide();
@@ -197,7 +198,7 @@ function login(){
           updateStatusText("");
           displayAlert(data.value, "danger");
         }else{
-          window.location.href = window.location.href;
+          window.location.reload();
         }
       },
       error:function(ts){

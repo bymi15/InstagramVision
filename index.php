@@ -13,6 +13,36 @@
   <script src="js/app.js"></script>
   </head>
   <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="javascript:void(0)">InstaVision</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <?php
+          //if user is logged in
+          session_start();
+          if(isset($_COOKIE['advSet'], $_SESSION['token'], $_SESSION['email'])){
+            echo'
+          <li><a href="javascript:void(0)">Welcome <strong>' . htmlspecialchars($_SESSION['email']) . '</strong></a></li>
+          <li><a id="btnLogout" href="javascript:void(0)" onclick="logout();">Logout</a></li>
+          ';
+          }else{
+            echo'
+            <li><a href="javascript:void(0)">Please <strong>log in</strong></a></li>
+            ';
+          }
+          ?>
+        </ul>
+      </div>
+    </nav>
+
     <div class="container">
       <div class="page-header">
       <h1>Instagram Vision</h1>
@@ -22,23 +52,12 @@
 
       <?php
         //if user is logged in
-        session_start();
         if(isset($_COOKIE['advSet'], $_SESSION['token'], $_SESSION['email'])){
           echo'
           <div class="form-group">
             <div id="status_text" class="col-lg-3 col-lg-offset-5 label label-info"></div>
             <img id="spinner" src="img/ajax-loader.gif" style="display:none; padding-left: 5px;"/>
             <div id="alert_message"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="col-lg-2 control-label"></label>
-            <h4 class="col-lg-8">You are logged in as: <strong>' . $_SESSION["email"] . '</strong></h4>
-            <div class="col-lg-2">
-                <button id="btnLogout" class="col-lg-12 btn btn-info" onclick="logout();">
-                    Logout
-                </button>
-            </div>
           </div>
 
           <div class="form-group">
